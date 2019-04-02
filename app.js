@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const width = 11
   const squares = []
   let player = 0
+  let score = 0
+  const scoreboard = document.querySelector('.score')
 
   for(let i = 0; i < width * width; i++) {
     const square = document.createElement('div')
@@ -57,23 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     squares[laserIndex].classList.remove('laser')
   }
 
- // alien dying
- // if(squares[laserIndex].classList.contains('alien') && squares[laserIndex].classList.contains('laser')) {
- //   // remove alien class
- //   laser.classList.remove('alien')
- //   // remove class of laser
- //   laser.classList.remove('laser')
- //   // remove lasersIndex from the aliens array
- //   const index = alienArray.indexOf(laserIndex)
- //   console.log(laserIndex)
- //   alienArray.splice(index,1)
- //   squares[laserIndex].classList.remove('alien')
- //   squares[laserIndex].classList.remove('laser')
- //   // stop the lasersInterval
- //   clearInterval(laserInterval)
- //   // increment some kind of score...
- // }
-
   //Laser stuff
 
 
@@ -91,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
       else if (laser) {
-        console.log(laserIndex)
         // Set the new index for the missiles square
         laserIndex += direction
         // Get the new DOM element of the next square
@@ -102,6 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!isNaN(laserIndex) && squares[laserIndex].classList.contains('alien')){
         alienShot(laserIndex, laserInterval)
+        score ++
+        console.log(score)
+        scoreboard.textContent = score
+
       }
       //...repeat every 100ms
     }, speed)
@@ -149,16 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
   //Player and Bomb collision
   function collision() {
     const currentPlayer = squares.find(square => square.classList.contains('player'))
-    console.log(currentPlayer)
     const collisionInterval = setInterval(() => {
       if (currentPlayer.classList.contains('bomb')) {
         currentPlayer.classList.remove('player')
       }
     }, 200)
   }
-
-// Alien and laser collision
-
 
 
 })

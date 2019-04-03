@@ -6,50 +6,52 @@ document.addEventListener('DOMContentLoaded', () => {
   const squares = []
   let player = 0
   let score = 0
+  let lives = 3
   const scoreboard = document.querySelector('.score')
+  const livesboard = document.querySelector('.lives')
 
+
+  // CREATE THE GRID
   for(let i = 0; i < width * width; i++) {
     const square = document.createElement('div')
     squares.push(square)
     grid.appendChild(square)
   }
 
-  // Player stuff //
+  // CREATE THE PLAYER
   let playerIndex = 115
   squares[playerIndex].classList.add('player')
 
-  function move() {
-    const player = squares.find(square => square.classList.contains('player'))
-    player.classList.remove('player')
+  // FUNCTION FOR MOVING THE PLAYER
+  function move(amount) {
+    squares[playerIndex].classList.remove('player')
+    playerIndex = playerIndex+amount
     squares[playerIndex].classList.add('player')
-    collision()
   }
-
+  //EVENT LISTENER FOR MOVING THE PLAYER
   document.addEventListener('keydown', (e) => {
     switch(e.keyCode) {
       case 37:
         // left
         if(playerIndex % width > 0) {
-          playerIndex--
-          move()
+          move(-1)
         }
         break
 
       case 39:
         // right
         if(playerIndex % width < width - 1) {
-          playerIndex++
-          move()
+          move(+1)
         }
         break
 
       case 32:
       //spacebar
-        shootLasers(playerIndex, -width, 'laser', 150)
+        shootLasers(playerIndex, -width, 'laser', 100)
     }
   })
 
-
+  // WHEN AN ALIEN IS SHOT DOWN
   function alienShot(laserIndex, laserInterval) {
     squares[laserIndex].classList.remove('laser')
     clearInterval(laserInterval)
@@ -84,10 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
         squares[laserIndex].classList.add(className)
       }
 
-      if (!isNaN(laserIndex) && squares[laserIndex].classList.contains('alien')){
+      if (className === 'laser' && !isNaN(laserIndex) && squares[laserIndex].classList.contains('alien')){
         alienShot(laserIndex, laserInterval)
         score ++
-        console.log(score)
         scoreboard.textContent = score
 
       }
@@ -129,20 +130,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Alien Bomb
 
   setInterval(() => {
-    bombIndex = alienArray[Math.floor(Math.random()*(alienArray.length - 1))]
+    const bombIndex = alienArray[Math.floor(Math.random()*(alienArray.length - 1))]
     shootLasers(bombIndex, width, 'bomb', 300)
 
   },2000)
 
   //Player and Bomb collision
   function collision() {
-    const currentPlayer = squares.find(square => square.classList.contains('player'))
     const collisionInterval = setInterval(() => {
+      const currentPlayer = squares[playerIndex]
       if (currentPlayer.classList.contains('bomb')) {
-        currentPlayer.classList.remove('player')
+        currentPlayer.classList.remove('bomb')
+        if (lives > 0) {
+          lives--
+          livesboard.textContent = lives
+        }
+        if (lives === 0) {
+          console.log('finished')
+          clearInterval(collisionInterval)
+          // stop EVERYTHING...
+          currentPlayer.classList.remove('player')
+        }
       }
-    }, 200)
+    }, 100)
   }
+
+
+//function for game over
+  collision()
+
+
+
 
 
 })

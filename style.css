@@ -63,14 +63,17 @@ body {
 .interface {
   background: white;
   margin-left: 50px;
-  width: 150px;
+  width: 100px;
+  align-items: center;
 }
 
 .interface > p {
   color: black;
-  font-size: 20px;
+  font-size: 30px;
   text-align: center;
 }
+
+
 
 /*Effect to move my player image*/
 /* @-webkit-keyframes spaceboots {

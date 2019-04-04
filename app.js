@@ -6,29 +6,33 @@ let lives = 3
 let grid
 let scoreboard
 let livesboard
-let alienArray = [1, 3, 4, 5, 6, 7, 9, 12, 14, 15, 16, 17, 18, 20, 23, 25, 26, 27, 28,29, 31]
+const alienArrayStart = [1, 3, 4, 5, 6, 7, 9, 12, 14, 15, 16, 17, 18, 20, 23, 25, 26, 27, 28,29, 31]
+let alienArray = alienArrayStart
 let playerIndex = 115
-let moveIndex = -1
+let moveIndex
 let gameInPlay = false
 const moves = [-1, 11, 1, 1, -11, -1]
+let alienMovement
+let alienShooting
 
 function createAlien() {
   alienArray.forEach(alien => {
-    squares[alien].classList.add('alien')
+    squares[alien].classList.toggle('alien')
   })
 }
 
 function init(){
+
   grid = document.querySelector('.grid')
   scoreboard = document.querySelector('.score')
   livesboard = document.querySelector('.lives')
   createGrid()
   createAlien()
   addEvents()
-  alienIntervals()
   collision()
   // CREATE THE PLAYER
   squares[playerIndex].classList.add('player')
+
 }
 
 // CREATE THE GRID
@@ -39,7 +43,7 @@ function createGrid(){
     grid.appendChild(square)
   }
 }
-
+// FUNCTION FOR MOVING THE ALIENS
 function moveAlien(movement) {
   alienArray.forEach(alien => {
     squares[alien].classList.remove('alien')
@@ -57,38 +61,46 @@ function move(amount) {
   squares[playerIndex].classList.add('player')
 }
 
-//EVENT LISTENER FOR MOVING THE PLAYER
+// FUNCTION FOR REMOVING WLECOME_SCREEN
+function moveScreen() {
+  document.querySelector('.welcome_screen').classList.toggle('hide')
+}
+
+//MOVING THE PLAYER & SHOOTING (EVENT LISTENERS)
 function addEvents(){
   document.addEventListener('keydown', (e) => {
-    e.preventDefault()
-    if(gameInPlay){
-      switch(e.keyCode) {
-        case 37:
-        // left
-          if(playerIndex % width > 0) {
-            move(-1)
-          }
-          break
+    switch(e.keyCode) {
+      case 37:
+      // left
+        if(playerIndex % width > 0) {
+          move(-1)
+        }
+        break
 
-        case 39:
+      case 39:
         // right
-          if(playerIndex % width < width - 1) {
-            move(+1)
-          }
-          break
+        if(playerIndex % width < width - 1) {
+          move(+1)
+        }
+        break
 
-        case 32:
+      case 32:
+        e.preventDefault()
         //spacebar
-          shootLasers(playerIndex, -width, 'laser', 100)
-      }
+        shootLasers(playerIndex, -width, 'laser', 100)
     }
   })
-  // restart button
 
+  //MOVE SCREEN AND START GAME (EVENT LISTENER)
   document
-    .querySelector('.restartbutton')
-    .addEventListener('click', startGame)
+    .querySelector('.startbutton')
+    .addEventListener('click', () => {
+      moveScreen()
+      startGame()
+    })
+
 }
+
 
 //Laser stuff
 function shootLasers(shooterIndex, direction, className, speed) {
@@ -117,7 +129,6 @@ function shootLasers(shooterIndex, direction, className, speed) {
       alienShot(laserIndex, laserInterval)
       score ++
       scoreboard.textContent = score
-
     }
     //...repeat every 100ms
   }, speed)
@@ -131,20 +142,22 @@ function alienShot(laserIndex, laserInterval) {
   alienArray.splice(index,1)
   squares[laserIndex].classList.remove('alien')
   squares[laserIndex].classList.remove('laser')
+  if (alienArray.length === 0) {
+    endGame()
+    document.querySelector('.para').textContent = 'You win'
+  }
 }
 
 // Alien Stuff//
 function alienIntervals(){
-  setInterval(() => {
+  alienMovement = setInterval(() => {
     moveIndex= moveIndex === 5 ? 0 : moveIndex + 1
     moveAlien(moves[moveIndex])
   }, 500)
-
   // Alien Bomb
-  setInterval(() => {
-    const bombIndex = alienArray[Math.floor(Math.random()*(alienArray.length - 1))]
+  alienShooting = setInterval(() => {
+    const bombIndex =   alienArray[Math.floor(Math.random()*(alienArray.length - 1))]
     shootLasers(bombIndex, width, 'bomb', 300)
-
   },2000)
 }
 
@@ -160,6 +173,7 @@ function collision() {
       }
       if (lives === 0) {
         endGame()
+        document.querySelector('.para').textContent = 'You lose'
         clearInterval(collisionInterval)
         collisionInterval = null
         // stop EVERYTHING...
@@ -168,14 +182,34 @@ function collision() {
   }, 100)
 }
 
+function resetTimers(){
+  clearInterval(alienMovement)
+  clearInterval(alienShooting)
+}
+
 function endGame(){
   gameInPlay = false
+  resetTimers()
   console.log('finished')
   squares[playerIndex].classList.remove('player')
+  document.querySelector('.welcome_screen').classList.toggle('hide')
+  document.querySelector('.yourscore').textContent = `Your score is ${score}!`
 }
 
 function startGame() {
+  resetTimers()
   gameInPlay = true
+  moveIndex = -1
+  score = 0
+  scoreboard.textContent = score
+  lives = 3
+  livesboard.textContent = lives
+  alienArray = alienArrayStart
+  createAlien()
+  alienIntervals()
+  playerIndex = 115
+  squares[playerIndex].classList.add('player')
+  collision()
 }
 
 document.addEventListener('DOMContentLoaded', init)

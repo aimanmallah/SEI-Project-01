@@ -15,6 +15,7 @@ const moves = [-1, 11, 1, 1, -11, -1]
 let alienMovement
 let alienShooting
 
+
 function createAlien() {
   alienArray.forEach(alien => {
     squares[alien].classList.toggle('alien')
@@ -22,7 +23,6 @@ function createAlien() {
 }
 
 function init(){
-
   grid = document.querySelector('.grid')
   scoreboard = document.querySelector('.score')
   livesboard = document.querySelector('.lives')
@@ -30,6 +30,7 @@ function init(){
   createAlien()
   addEvents()
   collision()
+
   // CREATE THE PLAYER
   squares[playerIndex].classList.add('player')
 
@@ -52,6 +53,11 @@ function moveAlien(movement) {
   alienArray.forEach(alien => {
     squares[alien].classList.add('alien')
   })
+  if(alienArray.some(index => index > 111)){
+    endGame()
+    document.querySelector('.para').textContent = 'You lose'
+    resetTimers()
+  }
 }
 
 // FUNCTION FOR MOVING THE PLAYER
@@ -68,6 +74,7 @@ function moveScreen() {
 
 //MOVING THE PLAYER & SHOOTING (EVENT LISTENERS)
 function addEvents(){
+  const laserAudio = document.querySelector('.sound')
   document.addEventListener('keydown', (e) => {
     switch(e.keyCode) {
       case 37:
@@ -85,9 +92,11 @@ function addEvents(){
         break
 
       case 32:
-        e.preventDefault()
         //spacebar
         shootLasers(playerIndex, -width, 'laser', 100)
+        e.preventDefault()
+        laserAudio.src = 'Audio/shoot.wav'
+        laserAudio.play()
     }
   })
 
@@ -98,30 +107,20 @@ function addEvents(){
       moveScreen()
       startGame()
     })
-
 }
 
-
-//Laser stuff
+//LASER AND BOMB DROP FUNCTION
 function shootLasers(shooterIndex, direction, className, speed) {
-  // Get the index of the square above the player
   let laserIndex = shooterIndex + direction
-  // Get the DOM element of the square above the player
   let laser = squares[laserIndex]
-  // Move missiles up
   const laserInterval = setInterval(() => {
-    // Remove missiles class from the current square
     if (laser) laser.classList.remove(className)
 
     if (laserIndex + direction < 0 || laserIndex + direction >= width**2) clearInterval(laserInterval)
 
-
     else if (laser) {
-      // Set the new index for the missiles square
       laserIndex += direction
-      // Get the new DOM element of the next square
       laser = squares[laserIndex]
-      // Add missiles class to the next square up
       squares[laserIndex].classList.add(className)
     }
 
@@ -129,8 +128,11 @@ function shootLasers(shooterIndex, direction, className, speed) {
       alienShot(laserIndex, laserInterval)
       score ++
       scoreboard.textContent = score
+      squares[laserIndex].classList.add('explode')
+      setTimeout(() => {
+        squares[laserIndex].classList.remove('explode')
+      },400)
     }
-    //...repeat every 100ms
   }, speed)
 }
 
@@ -148,16 +150,17 @@ function alienShot(laserIndex, laserInterval) {
   }
 }
 
-// Alien Stuff//
+// ALIEN MOVEMENT
 function alienIntervals(){
   alienMovement = setInterval(() => {
     moveIndex= moveIndex === 5 ? 0 : moveIndex + 1
     moveAlien(moves[moveIndex])
-  }, 500)
-  // Alien Bomb
+  }, 600)
+
+  // ALIEN DROPPING BOMBS
   alienShooting = setInterval(() => {
     const bombIndex =   alienArray[Math.floor(Math.random()*(alienArray.length - 1))]
-    shootLasers(bombIndex, width, 'bomb', 300)
+    shootLasers(bombIndex, width, 'bomb', 200)
   },2000)
 }
 
@@ -167,6 +170,10 @@ function collision() {
     const currentPlayer = squares[playerIndex]
     if (currentPlayer.classList.contains('bomb')) {
       currentPlayer.classList.remove('bomb')
+      currentPlayer.classList.add('explode')
+      setTimeout(() => {
+        currentPlayer.classList.remove('explode')
+      },200)
       if (lives > 0) {
         lives--
         livesboard.textContent = lives
@@ -176,7 +183,6 @@ function collision() {
         document.querySelector('.para').textContent = 'You lose'
         clearInterval(collisionInterval)
         collisionInterval = null
-        // stop EVERYTHING...
       }
     }
   }, 100)
@@ -189,14 +195,18 @@ function resetTimers(){
 
 function endGame(){
   gameInPlay = false
+  squares[playerIndex].classList.remove('player')
   resetTimers()
   console.log('finished')
-  squares[playerIndex].classList.remove('player')
   document.querySelector('.welcome_screen').classList.toggle('hide')
   document.querySelector('.yourscore').textContent = `Your score is ${score}!`
 }
 
 function startGame() {
+  squares[playerIndex].classList.remove('player')
+  alienArray.forEach(alien => {
+    squares[alien].classList.remove('alien')
+  })
   resetTimers()
   gameInPlay = true
   moveIndex = -1

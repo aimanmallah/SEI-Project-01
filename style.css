@@ -19,7 +19,7 @@ body {
   display: flex;
   flex-grow: 1;
   flex-wrap: wrap;
-  border: white 2px solid;
+  border: white 5px solid;
   justify-content: center;
   width: 1000px;
   height: 650px;
@@ -50,10 +50,8 @@ body {
 
 }
 
-h1 {
-  color: white;
-  font-size: 60px;
-  margin: 0;
+.logo {
+width: 95%;
 }
 
 h3 {
@@ -129,7 +127,7 @@ h3 {
   height: 100px;
   background: black;
   border: white solid 3px;
-  opacity: 0.8;
+  opacity: 0.9;
   border-radius: 15px;
   display: flex;
   flex-direction: column;

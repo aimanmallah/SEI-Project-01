@@ -6,12 +6,12 @@ let lives = 3
 let grid
 let scoreboard
 let livesboard
-const alienArrayStart = [1, 3, 4, 5, 6, 7, 9, 12, 14, 15, 16, 17, 18, 20, 23, 25, 26, 27, 28,29, 31]
+const alienArrayStart = [1, 3, 4, 5, 6, 7, 9, 12, 14, 15, 16, 17, 18, 20, 23, 25, 26, 27, 28, 29, 31, 34, 36, 37, 38, 39, 40, 42]
 let alienArray = alienArrayStart
 let playerIndex = 115
 let moveIndex
 let gameInPlay = false
-const moves = [-1, 11, 1, 1, -11, -1]
+const moves = [-1, 11, 1, 1, 11, -1]
 let alienMovement
 let alienShooting
 
@@ -58,6 +58,10 @@ function moveAlien(movement) {
     document.querySelector('.para').textContent = 'You lose'
     resetTimers()
   }
+  if(aliensArray.some(index => index > 80)){
+    endGame()
+    document.querySelector('.para').textContent = 'You lose'
+  }
 }
 
 // FUNCTION FOR MOVING THE PLAYER
@@ -74,29 +78,31 @@ function moveScreen() {
 
 //MOVING THE PLAYER & SHOOTING (EVENT LISTENERS)
 function addEvents(){
-  const laserAudio = document.querySelector('.sound')
+  const laserAudio = document.querySelector('.shoot')
   document.addEventListener('keydown', (e) => {
     switch(e.keyCode) {
       case 37:
       // left
-        if(playerIndex % width > 0) {
+        if(playerIndex % width > 0 && gameInPlay === true) {
           move(-1)
         }
         break
 
       case 39:
         // right
-        if(playerIndex % width < width - 1) {
+        if(playerIndex % width < width - 1 && gameInPlay === true) {
           move(+1)
         }
         break
 
       case 32:
         //spacebar
-        shootLasers(playerIndex, -width, 'laser', 100)
-        e.preventDefault()
-        laserAudio.src = 'Audio/shoot.wav'
-        laserAudio.play()
+        if (gameInPlay) {
+          shootLasers(playerIndex, -width, 'laser', 100)
+          e.preventDefault()
+          laserAudio.src = 'Audio/shoot.wav'
+          laserAudio.play()
+        }
     }
   })
 
@@ -138,6 +144,9 @@ function shootLasers(shooterIndex, direction, className, speed) {
 
 // WHEN AN ALIEN IS SHOT DOWN
 function alienShot(laserIndex, laserInterval) {
+  const aliendeadAudio = document.querySelector('.aliendead')
+  aliendeadAudio.src = 'Audio/invaderkilled.wav'
+  aliendeadAudio.play()
   squares[laserIndex].classList.remove('laser')
   clearInterval(laserInterval)
   const index = alienArray.indexOf(laserIndex)
@@ -175,6 +184,9 @@ function collision() {
         currentPlayer.classList.remove('explode')
       },200)
       if (lives > 0) {
+        const defeatAudio = document.querySelector('.defeat')
+        defeatAudio.src = 'Audio/Explosion+1.wav'
+        defeatAudio.play()
         lives--
         livesboard.textContent = lives
       }

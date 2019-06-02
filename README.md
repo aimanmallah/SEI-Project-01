@@ -1,4 +1,4 @@
-# GA-SEI-project-01
+# General Assembly-SEI-Project-01
 
 ### Timeframe
 5 days

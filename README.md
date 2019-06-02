@@ -1,4 +1,4 @@
-# Project 1 : Simple front-end game
+# GA-SEI-project-01
 
 ### Timeframe
 5 days

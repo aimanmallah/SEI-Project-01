@@ -17,7 +17,7 @@
 
 ## Space Invaders :space_invader:
 ![Space Invaders](https://user-images.githubusercontent.com/47919053/55615254-d4447080-5786-11e9-8fcd-d9299f428832.png)
-You can find a hosted version here ----> [google.com](https://google.com)
+You can find a hosted version [here](https://aimanmallah.github.io/SEI-Project-01/)
 
 ### Game overview
 Space Invaders is a 1978 arcade game created by Tomohiro Nishikado. Within the shooter genre, Space Invaders is one of the earliest shoot 'em ups and the first fixed shooter. The goal is to defeat wave after wave of descending aliens with a horizontally moving laser to earn as many points as possible.

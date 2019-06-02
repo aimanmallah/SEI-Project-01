@@ -5,9 +5,9 @@
 
 ## Technologies used
 
-* JavaScript (ES6) + jQuery
+* JavaScript (ES6)
 * HTML5 + HTML5 Audio
-* SCSS + CSS Animation
+* CSS
 * GitHub
 
 ## Installation
@@ -15,7 +15,7 @@
 1. Clone or download the repo
 1. Open the `index.html` in your browser of choice
 
-## My Game - Space Invaders :space_invader:
+## Space Invaders :space_invader:
 ![Space Invaders](https://user-images.githubusercontent.com/47919053/55615254-d4447080-5786-11e9-8fcd-d9299f428832.png)
 You can find a hosted version here ----> [google.com](https://google.com)
 

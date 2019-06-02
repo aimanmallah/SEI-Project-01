@@ -1,4 +1,4 @@
-# General Assembly Project 1 : Simple front-end game
+# Project 1 : Simple front-end game
 
 ### Timeframe
 5 days

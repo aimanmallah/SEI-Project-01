@@ -29,7 +29,8 @@ Space Invaders is a 1978 arcade game created by Tomohiro Nishikado. Within the s
 ### Game Instructions
 1. The game begins with a welcome screen  The game is started by clicking on the "Start" button.
 
-![screenshot - Start Screen](https://user-images.githubusercontent.com/47919053/55616976-fc35d300-578a-11e9-98d8-7d2f297996e4.png)
+![Screenshot 2019-06-09 at 21 47 15](https://user-images.githubusercontent.com/47919053/59164134-fb118100-8b00-11e9-9abc-b48ddf4bff05.png)
+
 
 2. After the start button has been clicked the game shows on the screen. The user starts on 3 lives and a score of zero.
 

@@ -58,7 +58,9 @@ The shooting function and the bombs dropped by the aliens use the same functions
 
 ### Challenges
 
-The biggest challenge for this project making sure the aliens moved in sync and in the correct manner.
+The biggest challenge for this project making sure the spaceship moved in the correct manner. Once this was solved, other functions were built using similar logic.
+
+![image](https://user-images.githubusercontent.com/47919053/60401759-e7948b80-9b7d-11e9-9414-4d59135a71f3.png)
 
 ### Wins
 
